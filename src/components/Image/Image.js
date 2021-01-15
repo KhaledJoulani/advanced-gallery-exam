@@ -14,12 +14,13 @@ class Image extends React.Component {
     super(props);
     this.calcImageSize = this.calcImageSize.bind(this);
     this.state = {
-      size: 200
+      size: 200,
+      rotate: 0
     };
   }
 
   calcImageSize() {
-    const {galleryWidth} = this.props;
+    const { galleryWidth } = this.props;
     const targetSize = 200;
     const imagesPerRow = Math.round(galleryWidth / targetSize);
     const size = (galleryWidth / imagesPerRow);
@@ -36,20 +37,28 @@ class Image extends React.Component {
     return `https://farm${dto.farm}.staticflickr.com/${dto.server}/${dto.id}_${dto.secret}.jpg`;
   }
 
+  rotateImage = () => {
+    // Roate by 90 degree
+    this.setState(state => {
+      return { rotate: state.rotate + 90 }
+    })
+  }
+
   render() {
     return (
-      <div
-        className="image-root"
-        style={{
-          backgroundImage: `url(${this.urlFromDto(this.props.dto)})`,
-          width: this.state.size + 'px',
-          height: this.state.size + 'px'
-        }}
-        >
-        <div>
-          <FontAwesome className="image-icon" name="sync-alt" title="rotate"/>
-          <FontAwesome className="image-icon" name="trash-alt" title="delete" onClick={() => this.props.removeImage(this.props.dto.id)}/>
-          <FontAwesome className="image-icon" name="expand" title="expand"/>
+      <div className="image-root">
+        <div className="image-container"
+          style={{
+            backgroundImage: `url(${this.urlFromDto(this.props.dto)})`,
+            width: this.state.size + 'px',
+            height: this.state.size + 'px',
+            transform: `rotate(${this.state.rotate}deg)`
+          }}
+        ></div>
+        <div className='actions'>
+          <FontAwesome className="image-icon" name="sync-alt" title="rotate" onClick={this.rotateImage} />
+          <FontAwesome className="image-icon" name="trash-alt" title="delete" onClick={() => this.props.removeImage(this.props.dto.id)} />
+          <FontAwesome className="image-icon" name="expand" title="expand" />
         </div>
       </div>
     );
