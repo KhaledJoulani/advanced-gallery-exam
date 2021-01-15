@@ -6,7 +6,8 @@ import './Image.scss';
 class Image extends React.Component {
   static propTypes = {
     dto: PropTypes.object,
-    galleryWidth: PropTypes.number
+    galleryWidth: PropTypes.number,
+    removeImage: PropTypes.func
   };
 
   constructor(props) {
@@ -47,7 +48,7 @@ class Image extends React.Component {
         >
         <div>
           <FontAwesome className="image-icon" name="sync-alt" title="rotate"/>
-          <FontAwesome className="image-icon" name="trash-alt" title="delete"/>
+          <FontAwesome className="image-icon" name="trash-alt" title="delete" onClick={() => this.props.removeImage(this.props.dto.id)}/>
           <FontAwesome className="image-icon" name="expand" title="expand"/>
         </div>
       </div>
