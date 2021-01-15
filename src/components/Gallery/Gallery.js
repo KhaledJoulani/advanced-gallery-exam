@@ -45,11 +45,20 @@ class Gallery extends React.Component {
       });
   }
 
-  componentDidMount() {
-    this.getImages(this.props.tag);
+  resizeGalleryWidth = () => {
     this.setState({
       galleryWidth: document.body.clientWidth
     });
+  }
+
+  componentDidMount() {
+    this.getImages(this.props.tag);
+    this.resizeGalleryWidth()
+    window.addEventListener('resize', this.resizeGalleryWidth);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resizeGalleryWidth);
   }
 
   componentWillReceiveProps(props) {
@@ -59,7 +68,7 @@ class Gallery extends React.Component {
   removeImageFromList = (imageId) => {
     this.setState(state => {
       const updatedImageList = state.images.filter(img => {
-          if(img.id !== imageId) return img;
+        if (img.id !== imageId) return img;
       });
       return { images: updatedImageList }
     })
@@ -69,7 +78,7 @@ class Gallery extends React.Component {
     return (
       <div className="gallery-root">
         {this.state.images.map(dto => {
-          return <Image key={'image-' + dto.id} dto={dto} galleryWidth={this.state.galleryWidth} removeImage={this.removeImageFromList}/>;
+          return <Image key={'image-' + dto.id} dto={dto} galleryWidth={this.state.galleryWidth} removeImage={this.removeImageFromList} />;
         })}
       </div>
     );

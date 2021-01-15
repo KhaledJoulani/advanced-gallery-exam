@@ -34,6 +34,10 @@ class Image extends React.Component {
     this.calcImageSize();
   }
 
+  componentWillReceiveProps() {
+    this.calcImageSize();
+  }
+
   urlFromDto(dto) {
     return `https://farm${dto.farm}.staticflickr.com/${dto.server}/${dto.id}_${dto.secret}.jpg`;
   }
@@ -45,7 +49,7 @@ class Image extends React.Component {
     })
   }
 
-  closeView = (e)=>{
+  closeView = (e) => {
     e.stopPropagation();
     this.setState({ fullScreen: false })
   }
@@ -63,16 +67,16 @@ class Image extends React.Component {
         ></div>
 
         {
-          this.state.fullScreen && <div className="display-full-image" onClick={e=> this.closeView(e) }>
-            <span className='close-image-view' onClick={e=> this.closeView(e)}>&times;</span>
-            <img src={this.urlFromDto(this.props.dto)} alt={this.props.dto.title} style={{transform: `rotate(${this.state.rotate}deg)`}} onClick={e => e.stopPropagation()}/>
+          this.state.fullScreen && <div className="display-full-image" onClick={e => this.closeView(e)}>
+            <span className='close-image-view' onClick={e => this.closeView(e)}>&times;</span>
+            <img src={this.urlFromDto(this.props.dto)} alt={this.props.dto.title} style={{ transform: `rotate(${this.state.rotate}deg)` }} onClick={e => e.stopPropagation()} />
           </div>
         }
 
         <div className='actions'>
           <FontAwesome className="image-icon" name="sync-alt" title="rotate" onClick={this.rotateImage} />
           <FontAwesome className="image-icon" name="trash-alt" title="delete" onClick={() => this.props.removeImage(this.props.dto.id)} />
-          <FontAwesome className="image-icon" name="expand" title="expand" onClick={()=> this.setState({ fullScreen: true })} />
+          <FontAwesome className="image-icon" name="expand" title="expand" onClick={() => this.setState({ fullScreen: true })} />
         </div>
       </div>
     );
