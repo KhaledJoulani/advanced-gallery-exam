@@ -56,7 +56,7 @@ class Image extends React.Component {
 
   render() {
     return (
-      <div className="image-root">
+      <div className="image-root" title={this.props.dto.id}>
         <div className="image-container"
           style={{
             backgroundImage: `url(${this.urlFromDto(this.props.dto)})`,
