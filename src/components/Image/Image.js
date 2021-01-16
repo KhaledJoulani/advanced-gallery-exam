@@ -7,7 +7,8 @@ class Image extends React.Component {
   static propTypes = {
     dto: PropTypes.object,
     galleryWidth: PropTypes.number,
-    removeImage: PropTypes.func
+    removeImage: PropTypes.func,
+    index: PropTypes.number
   };
 
   constructor(props) {
@@ -43,7 +44,7 @@ class Image extends React.Component {
   }
 
   rotateImage = () => {
-    // Roate by 90 degree
+    // Rotate by 90 degree
     this.setState(state => {
       return { rotate: state.rotate + 90 }
     })
@@ -54,9 +55,29 @@ class Image extends React.Component {
     this.setState({ fullScreen: false })
   }
 
+  handleDragStart = (e) => {
+    this.props.draggableItem.source = e.currentTarget.id;
+  }
+
+  hanldeDragEnter = (e) => {
+    const { draggableItem } = this.props;
+    e.preventDefault();
+    if (draggableItem.source !== e.currentTarget.id) {
+      e.target.style.opacity = .2;
+      draggableItem.destination = e.currentTarget.id;
+    }else {
+      draggableItem.destination = null;
+    }
+  }
+
+  handleDragLeave(e) {
+    e.preventDefault();
+    e.target.style.opacity = '';
+  }
+
   render() {
     return (
-      <div className="image-root" title={this.props.dto.id}>
+      <div className="image-root" id={`${this.props.index}`} draggable={true} onDragStart={e => this.handleDragStart(e)} onDragEnter={e => this.hanldeDragEnter(e)} onDragLeave={e => this.handleDragLeave(e)}>
         <div className="image-container"
           style={{
             backgroundImage: `url(${this.urlFromDto(this.props.dto)})`,

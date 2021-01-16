@@ -15,7 +15,8 @@ class Gallery extends React.Component {
       images: [],
       galleryWidth: this.getGalleryWidth(),
       page: 1,
-      loading: false
+      loading: false,
+      draggableItem: { source: null, destination: null }
     };
   }
 
@@ -93,11 +94,25 @@ class Gallery extends React.Component {
     })
   }
 
+  handleDropItem = (e) => {
+    e.preventDefault();
+
+    const { source, destination } = this.state.draggableItem;
+
+    if (!destination) return;
+
+    this.setState(state => {
+      const image = state.images.splice(source, 1)[0];
+      state.images.splice(destination, 0, image);
+      return { images: state.images };
+    })
+  }
+
   render() {
     return (
-      <div className="gallery-root">
+      <div className="gallery-root" onDrop={e => this.handleDropItem(e)} onDragOver={e=> e.preventDefault()} >
         {this.state.images.map((dto, index) => {
-          return <Image key={'image-' + dto.id + index} dto={dto} galleryWidth={this.state.galleryWidth} removeImage={this.removeImageFromList} />;
+          return <Image key={'image-' + dto.id + index} dto={dto} galleryWidth={this.state.galleryWidth} removeImage={this.removeImageFromList} index={index} draggableItem={this.state.draggableItem} />;
         })}
         {this.state.loading && <h2>Loading...</h2>}
       </div>
