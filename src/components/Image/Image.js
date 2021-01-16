@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
 import './Image.scss';
+import ImageViewer from '../ImageViewer/ImageViewer';
 
 class Image extends React.Component {
   static propTypes = {
@@ -17,7 +18,8 @@ class Image extends React.Component {
     this.state = {
       size: 200,
       rotate: 0,
-      fullScreen: false
+      fullScreen: false,
+      isDraggable: true
     };
   }
 
@@ -50,9 +52,8 @@ class Image extends React.Component {
     })
   }
 
-  closeView = (e) => {
-    e.stopPropagation();
-    this.setState({ fullScreen: false })
+  closeView = () => {
+    this.setState({ fullScreen: false, isDraggable: true });
   }
 
   handleDragStart = (e) => {
@@ -65,7 +66,7 @@ class Image extends React.Component {
     if (draggableItem.source !== e.currentTarget.id) {
       e.target.style.opacity = .2;
       draggableItem.destination = e.currentTarget.id;
-    }else {
+    } else {
       draggableItem.destination = null;
     }
   }
@@ -77,7 +78,7 @@ class Image extends React.Component {
 
   render() {
     return (
-      <div className="image-root" id={`${this.props.index}`} draggable={true} onDragStart={e => this.handleDragStart(e)} onDragEnter={e => this.hanldeDragEnter(e)} onDragLeave={e => this.handleDragLeave(e)}>
+      <div className="image-root" id={`${this.props.index}`} draggable={this.state.isDraggable} onDragStart={e => this.handleDragStart(e)} onDragEnter={e => this.hanldeDragEnter(e)} onDragLeave={e => this.handleDragLeave(e)}>
         <div className="image-container"
           style={{
             backgroundImage: `url(${this.urlFromDto(this.props.dto)})`,
@@ -88,16 +89,17 @@ class Image extends React.Component {
         ></div>
 
         {
-          this.state.fullScreen && <div className="display-full-image" onClick={e => this.closeView(e)}>
-            <span className='close-image-view' onClick={e => this.closeView(e)}>&times;</span>
-            <img src={this.urlFromDto(this.props.dto)} alt={this.props.dto.title} style={{ transform: `rotate(${this.state.rotate}deg)` }} onClick={e => e.stopPropagation()} />
-          </div>
+          this.state.fullScreen && <ImageViewer
+            imageUrl={this.urlFromDto(this.props.dto)}
+            closeView={this.closeView}
+            style={{ transform: `rotate(${this.state.rotate}deg)` }}
+          />
         }
 
         <div className='actions'>
           <FontAwesome className="image-icon" name="sync-alt" title="rotate" onClick={this.rotateImage} />
           <FontAwesome className="image-icon" name="trash-alt" title="delete" onClick={() => this.props.removeImage(this.props.dto.id)} />
-          <FontAwesome className="image-icon" name="expand" title="expand" onClick={() => this.setState({ fullScreen: true })} />
+          <FontAwesome className="image-icon" name="expand" title="expand" onClick={() => this.setState({ fullScreen: true, isDraggable: false })} />
         </div>
       </div>
     );
