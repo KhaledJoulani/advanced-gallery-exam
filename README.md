@@ -1,3 +1,7 @@
+# Extra feature
+
+A simple Image filter, accessible through the image full view
+
 # Flickr Gallery
 
 Welcome to the Flickr Gallery application.
