@@ -81,9 +81,11 @@ class Gallery extends React.Component {
     window.removeEventListener('scroll', this.scrollLoad);
   }
 
-  componentWillReceiveProps(props) {
-    this.setState({page: 1,images: []});
-    this.getImages(props.tag);
+  componentDidUpdate(prevProps){
+    if(prevProps.tag !== this.props.tag){
+      this.setState({page: 1,images: []});
+      this.getImages(this.props.tag);
+    }
   }
 
   removeImageFromList = (imageId) => {
@@ -115,6 +117,7 @@ class Gallery extends React.Component {
         {this.state.images.map((dto, index) => {
           return <Image key={'image-' + dto.id + index} dto={dto} galleryWidth={this.state.galleryWidth} removeImage={this.removeImageFromList} index={index} draggableItem={this.state.draggableItem} />;
         })}
+        {!this.state.loading && this.state.images.length === 0 && <h2>No results for "{this.props.tag}"</h2>}
         {this.state.loading && <h2>Loading...</h2>}
       </div>
     );
